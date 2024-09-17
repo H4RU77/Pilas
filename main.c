@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
-
 #define MAX 100
 
 typedef struct {
@@ -21,55 +20,55 @@ int estaLlena(Pila *p) {
     return p->top == MAX - 1;
 }
 
-void push(Pila *p, char val) {
+// función push
+void push(Pila *p, char valor) {
     if (estaLlena(p)) {
-        printf("Error: Pila llena\n");
+        printf("Error: La pila esta llena\n");
         return;
     }
-    p->items[++(p->top)] = val;
+    p->items[++(p->top)] = valor;
 }
 
+//fujción pop
 char pop(Pila *p) {
     if (estaVacia(p)) {
-        printf("Error: Pila vacÃ­a\n");
+        printf("Error: La pila esta vacía\n");
         return '\0';
     }
     return p->items[(p->top)--];
 }
 
-char tope(Pila *p) {
-    if (estaVacia(p)) {
-        return '\0';
+int esPalindromo(char str[]) {
+    Pila pila;
+    inicializarPila(&pila);
+    int longitud = strlen(str);
+    int mitad = longitud / 2; // mitad de la pila
+
+    // ignora espacios y caracteres especiales
+    for (int i = 0; i < longitud; i++) {
+        if (isalnum(str[i])) {
+            push(&pila, tolower(str[i]));
+        }
     }
-    return p->items[p->top];
-}
 
-int precedencia(char op) {
-    switch (op) {
-        case '+':
-        case '-': return 1;
-        case '*':
-        case '/': return 2;
-        case '(':
-        case '[':
-        case '{': return 0;
-        default: return -1;
+    for (int i = 0; i < mitad; i++) {
+        if (isalnum(str[i])) {
+            if (tolower(str[i]) != pop(&pila)) {
+                return 0; // no es palíndromo
+            }
+        }
     }
+    return 1; // es palíndromo
 }
-
-int esOperador(char c) {
-    return c == '+' || c == '-' || c == '*' || c == '/' || c == '(' || c == ')' || c == '[' || c == ']' || c == '{' || c == '}';
-}
-
-
 
 int main() {
-    char expresion[] = "{20*8} - [9/3] + (3*3)";
-    char postfijo[MAX];
+    char frase[] = "Anita lava la tina";
 
-    infijoAPostfijo(expresion, postfijo);
-    printf("ExpresiÃ³n postfija: %s\n", postfijo);
-    printf("Resultado: %d\n", evaluarPostfijo(postfijo));
+    if (esPalindromo(frase)) {
+        printf("La frase es un palíndromo\n");
+    } else {
+        printf("La frase no es un palíndromo\n");
+    }
 
     return 0;
 }
